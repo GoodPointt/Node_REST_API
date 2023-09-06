@@ -33,6 +33,11 @@ const contactSchema = new Schema(
       default: 'none',
       enum: categories,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
   },
   {
     versionKey: false,
@@ -56,9 +61,16 @@ const updateFavoriteJoiSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
+const updateCategoryJoiSchema = Joi.object({
+  category: Joi.string()
+    .valid(...categories)
+    .required(),
+});
+
 const schemas = {
   contactJoiSchema,
   updateFavoriteJoiSchema,
+  updateCategoryJoiSchema,
 };
 
 module.exports = { Contact, schemas };
