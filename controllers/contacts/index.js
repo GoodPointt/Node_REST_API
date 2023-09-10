@@ -4,6 +4,7 @@ const getById = require('./getById');
 const addNew = require('./addNew');
 const updById = require('./updById');
 const updFavorite = require('./updFavorite');
+const updCategory = require('./updCategory');
 const deleteById = require('./deleteById');
 
 module.exports = {
@@ -12,5 +13,6 @@ module.exports = {
   addNew: ctrlWrapper(addNew),
   updById: ctrlWrapper(updById),
   updFavorite: ctrlWrapper(updFavorite),
+  updCategory: ctrlWrapper(updCategory),
   deleteById: ctrlWrapper(deleteById),
 };

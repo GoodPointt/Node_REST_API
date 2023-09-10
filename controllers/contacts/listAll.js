@@ -1,4 +1,5 @@
 const { Contact } = require('../../models/contact');
+const { HttpError } = require('../../utils');
 
 const listAll = async (req, res) => {
   const { _id: owner } = req.user;
@@ -8,14 +9,23 @@ const listAll = async (req, res) => {
 
   const query = { owner };
 
-  if (favorite !== undefined) query.favorite = favorite;
-  if (
-    (category !== undefined && category === 'none') ||
-    category === 'friends' ||
-    category === 'family' ||
-    category === 'work'
-  )
-    query.category = category;
+  if (favorite !== undefined) {
+    if (favorite === 'true' || favorite === 'false') {
+      query.favorite = favorite;
+    } else {
+      throw HttpError(400);
+    }
+  }
+  if (category !== undefined) {
+    if (
+      category === 'none' ||
+      category === 'friends' ||
+      category === 'family' ||
+      category === 'work'
+    ) {
+      query.category = category;
+    } else throw HttpError(400);
+  }
 
   const result = await Contact.find(query, '-createdAt -updatedAt', {
     skip,
