@@ -25,6 +25,11 @@ const userSchema = new Schema(
       minLength: 6,
       required: [true, 'Password is required'],
     },
+    avatarURL: {
+      type: String,
+      required: true,
+      default: null,
+    },
 
     subscription: {
       type: String,
@@ -65,7 +70,9 @@ const userSignupJoiSchema = Joi.object({
     'any.required': `⚠️"password" is a required field`,
   }),
   subscription: Joi.string(),
-  // token: Joi.string().required(),
+  // avatarURL: Joi.string().required(),
+
+  token: Joi.string(),
 });
 
 const userLoginJoiSchema = Joi.object({
@@ -81,7 +88,8 @@ const userLoginJoiSchema = Joi.object({
     'string.min': `⚠️"password" !should have a minimum length of {#limit}`,
     'any.required': `⚠️"password" !is a required field`,
   }),
-  // token: Joi.string().required(),
+  // .required(),
+  token: Joi.string(),
 });
 
 const userChangeSubscriptionSchema = Joi.object({

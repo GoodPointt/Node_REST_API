@@ -1,11 +1,21 @@
 const express = require('express');
-const { validateBody, authenticate } = require('../../middlewares');
+
+const { validateBody, authenticate, upload } = require('../../middlewares');
+
 const { schemas } = require('../../models/user');
+
 const ctrl = require('../../controllers/users');
 
 const router = express.Router();
 
-router.post('/signup', validateBody(schemas.userSignupJoiSchema), ctrl.signUp);
+// upload.array('avatarURL', 8)
+// upload.fields({name: 'avatarURL', maxCount: 8}, {name: 'subAavatarURL', maxCount: 3});
+router.post(
+  '/signup',
+  upload.single('avatar'),
+  validateBody(schemas.userSignupJoiSchema),
+  ctrl.signUp
+);
 
 router.post('/login', validateBody(schemas.userLoginJoiSchema), ctrl.logIn);
 
@@ -18,6 +28,13 @@ router.patch(
   authenticate,
   validateBody(schemas.userChangeSubscriptionSchema),
   ctrl.changeSubscription
+);
+
+router.patch(
+  '/avatars',
+  authenticate,
+  upload.single('avatar'),
+  ctrl.updateAvatar
 );
 
 module.exports = router;
