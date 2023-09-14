@@ -40,6 +40,15 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+      required: [true, 'Verify token is required'],
+    },
   },
   {
     versionKey: false,
@@ -50,6 +59,15 @@ const userSchema = new Schema(
 userSchema.post('save', handleMongooseError);
 
 const User = model('users', userSchema);
+
+const emailVerifyJoiSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    'string.base': `⚠️"email" should be a type of 'text'`,
+    'string.empty': `⚠️"email" cannot be an empty field`,
+    'string.pattern.base': `⚠️"email" is not valid`,
+    'any.required': `⚠️"email" is a required field`,
+  }),
+});
 
 const userSignupJoiSchema = Joi.object({
   name: Joi.string().required().messages({
@@ -70,8 +88,6 @@ const userSignupJoiSchema = Joi.object({
     'any.required': `⚠️"password" is a required field`,
   }),
   subscription: Joi.string(),
-  // avatarURL: Joi.string().required(),
-
   token: Joi.string(),
 });
 
@@ -88,7 +104,6 @@ const userLoginJoiSchema = Joi.object({
     'string.min': `⚠️"password" !should have a minimum length of {#limit}`,
     'any.required': `⚠️"password" !is a required field`,
   }),
-  // .required(),
   token: Joi.string(),
 });
 
@@ -102,6 +117,7 @@ const schemas = {
   userSignupJoiSchema,
   userLoginJoiSchema,
   userChangeSubscriptionSchema,
+  emailVerifyJoiSchema,
 };
 
 module.exports = { User, schemas };
